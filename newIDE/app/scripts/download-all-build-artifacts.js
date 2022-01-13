@@ -24,32 +24,32 @@ shell.echo(
 
 const artifactsToDownload = {
   'Windows exe': {
-    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop 5 Setup ${version}.exe`,
-    outputFilename: `GDevelop-5-Setup-${version}.exe`,
+    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop Setup ${version}.exe`,
+    outputFilename: `GDevelop-Setup-${version}.exe`,
   },
   'Windows exe blockmap': {
-    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop 5 Setup ${version}.exe.blockmap`,
-    outputFilename: `GDevelop-5-Setup-${version}.exe.blockmap`,
+    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop Setup ${version}.exe.blockmap`,
+    outputFilename: `GDevelop-Setup-${version}.exe.blockmap`,
   },
   'Windows AppX': {
-    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop 5 ${version}.appx`,
-    outputFilename: `GDevelop 5 ${version}.appx`,
+    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop ${version}.appx`,
+    outputFilename: `GDevelop ${version}.appx`,
   },
   'Windows auto-update file': {
     url: 'https://gdevelop-releases.s3.amazonaws.com/master/latest/latest.yml',
     outputFilename: 'latest.yml',
   },
   'macOS zip': {
-    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop 5-${version}-mac.zip`,
-    outputFilename: `GDevelop-5-${version}-mac.zip`,
+    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop-${version}-mac.zip`,
+    outputFilename: `GDevelop-${version}-mac.zip`,
   },
   'macOS dmg': {
-    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop 5-${version}.dmg`,
-    outputFilename: `GDevelop-5-${version}.dmg`,
+    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop-${version}.dmg`,
+    outputFilename: `GDevelop-${version}.dmg`,
   },
   'macOS dmg blockmap': {
-    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop 5-${version}.dmg.blockmap`,
-    outputFilename: `GDevelop-5-${version}.dmg.blockmap`,
+    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop-${version}.dmg.blockmap`,
+    outputFilename: `GDevelop-${version}.dmg.blockmap`,
   },
   'macOS auto-update file': {
     url:
@@ -57,8 +57,8 @@ const artifactsToDownload = {
     outputFilename: 'latest-mac.yml',
   },
   'Linux AppImage': {
-    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop 5-${version}.AppImage`,
-    outputFilename: `GDevelop-5-${version}.AppImage`,
+    url: `https://gdevelop-releases.s3.amazonaws.com/master/latest/GDevelop-${version}.AppImage`,
+    outputFilename: `GDevelop-${version}.AppImage`,
   },
   'Linux auto-update file': {
     url:
