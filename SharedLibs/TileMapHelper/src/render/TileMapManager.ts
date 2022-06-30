@@ -1,4 +1,4 @@
-import { ResourceCache } from "../model/ResourceCache";
+import { ResourceCache } from "./ResourceCache";
 import { TiledMap } from "../tiled/Tiled";
 import { TiledTileMapLoader } from "../tiled/TiledTileMapLoader";
 import { EditableTileMap } from "../model/TileMapModel";

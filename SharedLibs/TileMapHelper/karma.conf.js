@@ -10,7 +10,6 @@ module.exports = function (config) {
     },
     files: [
             { pattern: "node_modules/expect.js/index.js" },
-            "./src/global-pixi.ts",
             { pattern: "./src/tiled/**/*.ts" },
             { pattern: "./src/model/**/*.ts" }
     ],
