@@ -30,10 +30,19 @@ import useDismissableTutorialMessage from '../Hints/useDismissableTutorialMessag
 import RaisedButton from '../UI/RaisedButton';
 import { AssetStoreContext } from './AssetStoreContext';
 import { AssetPackDialog } from './AssetPackDialog';
-import { installAsset } from './InstallAsset';
+import {
+  installAssetFromShortHeader,
+  installAssetFromUrl,
+} from './InstallAsset';
 import EventsFunctionsExtensionsContext from '../EventsFunctionsExtensionsLoader/EventsFunctionsExtensionsContext';
 import { useResourceFetcher } from '../ProjectsStorage/ResourceFetcher';
 import { showErrorBox } from '../UI/Messages/MessageBox';
+import { CustomAssetDialog } from './CustomAssetDialog';
+import {
+  getAssetFromUrl,
+  type AssetShortHeader,
+} from '../Utils/GDevelopServices/Asset';
+const isDev = process.env.NODE_ENV === 'development';
 
 const ObjectListItem = ({
   objectMetadata,
@@ -137,6 +146,10 @@ export default function NewObjectDialog({
     isAssetPackDialogInstallOpen,
     setIsAssetPackDialogInstallOpen,
   ] = React.useState(false);
+  const [isCustomAssetDialogOpen, setIsCustomAssetDialogOpen] = React.useState(
+    false
+  );
+  const [customAsset, setCustomAsset] = React.useState(null);
   const { containerObjectsList } = enumerateObjects(project, objectsContainer);
   const addedAssetIds = containerObjectsList
     .map(({ object }) => object.getAssetStoreId())
@@ -153,18 +166,27 @@ export default function NewObjectDialog({
     openedAssetShortHeader && addedAssetIds.includes(openedAssetShortHeader.id);
 
   const onInstallAsset = React.useCallback(
-    () => {
+    (options: ?{ customAssetUrl: string }) => {
       setIsAssetBeingInstalled(true);
       (async () => {
         if (!openedAssetShortHeader) return;
         try {
-          const installOutput = await installAsset({
-            assetShortHeader: openedAssetShortHeader,
-            eventsFunctionsExtensionsState,
-            project,
-            objectsContainer,
-            events,
-          });
+          const installOutput =
+            options && options.customAssetUrl
+              ? await installAssetFromUrl({
+                  assetUrl: options.customAssetUrl,
+                  eventsFunctionsExtensionsState,
+                  project,
+                  objectsContainer,
+                  events,
+                })
+              : await installAssetFromShortHeader({
+                  assetShortHeader: openedAssetShortHeader,
+                  eventsFunctionsExtensionsState,
+                  project,
+                  objectsContainer,
+                  events,
+                });
           sendAssetAddedToProject({
             id: openedAssetShortHeader.id,
             name: openedAssetShortHeader.name,
@@ -201,6 +223,31 @@ export default function NewObjectDialog({
     ]
   );
 
+  const onCustomAssetOpen = React.useCallback(
+    async ({ customAssetUrl }) => {
+      setIsCustomAssetDialogOpen(false);
+      const asset = await getAssetFromUrl(customAssetUrl);
+      const assetShortHeader: AssetShortHeader = {
+        id: asset.id,
+        name: asset.name,
+        shortDescription: asset.shortDescription,
+        previewImageUrls: asset.previewImageUrls,
+        tags: asset.tags,
+        license: asset.license,
+        objectType: asset.objectType,
+        animationsCount: asset.animationsCount,
+        maxFramesCount: asset.maxFramesCount,
+        width: asset.width,
+        height: asset.height,
+        dominantColors: asset.dominantColors,
+      };
+      setCustomAsset(asset);
+
+      navigationState.openDetailPage(assetShortHeader);
+    },
+    [navigationState]
+  );
+
   const mainAction = openedAssetPack ? (
     <RaisedButton
       key="add-all-assets"
@@ -225,6 +272,12 @@ export default function NewObjectDialog({
       onClick={onInstallAsset}
       disabled={isAssetBeingInstalled}
       id="add-asset-button"
+    />
+  ) : isDev ? (
+    <RaisedButton
+      key="open-asset-url"
+      label={<Trans>Open asset from URL</Trans>}
+      onClick={() => setIsCustomAssetDialogOpen(true)}
     />
   ) : (
     undefined
@@ -267,7 +320,9 @@ export default function NewObjectDialog({
               value="new-object"
             />
           </Tabs>
-          {currentTab === 'asset-store' && <AssetStore project={project} />}
+          {currentTab === 'asset-store' && (
+            <AssetStore project={project} customAsset={customAsset} />
+          )}
           {currentTab === 'new-object' && (
             <ScrollView>
               {DismissableTutorialMessage && (
@@ -312,6 +367,12 @@ export default function NewObjectDialog({
           objectsContainer={objectsContainer}
           events={events}
           onObjectAddedFromAsset={onObjectAddedFromAsset}
+        />
+      )}
+      {isCustomAssetDialogOpen && (
+        <CustomAssetDialog
+          onClose={() => setIsCustomAssetDialogOpen(false)}
+          onCustomAssetOpen={onCustomAssetOpen}
         />
       )}
       {resourcesFetcher.renderResourceFetcherDialog()}

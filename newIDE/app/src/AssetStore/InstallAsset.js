@@ -2,8 +2,9 @@
 import {
   type Asset,
   type AssetShortHeader,
-  getAsset,
   isPixelArt,
+  getAssetFromUrl,
+  getAssetFromShortHeader,
 } from '../Utils/GDevelopServices/Asset';
 import newNameGenerator from '../Utils/NewNameGenerator';
 import { unserializeFromJSObject } from '../Utils/Serializer';
@@ -439,7 +440,7 @@ export const addSerializedExtensionsToProject = (
 };
 
 type InstallAssetArgs = {|
-  assetShortHeader: AssetShortHeader,
+  asset: Asset,
   eventsFunctionsExtensionsState: EventsFunctionsExtensionsState,
   project: gdProject,
   events: gdEventsList,
@@ -450,14 +451,13 @@ type InstallAssetOutput = {|
   createdObjects: Array<gdObject>,
 |};
 
-export const installAsset = async ({
-  assetShortHeader,
+const installAsset = async ({
+  asset,
   eventsFunctionsExtensionsState,
   project,
   events,
   objectsContainer,
 }: InstallAssetArgs): Promise<InstallAssetOutput> => {
-  const asset = await getAsset(assetShortHeader);
   const requiredBehaviors = getRequiredBehaviorsFromAsset(asset);
   const requiredExtensions = getRequiredExtensionsForEventsFromAsset(asset);
   const missingBehaviors = filterMissingBehaviors(gd, requiredBehaviors);
@@ -503,4 +503,54 @@ export const installAsset = async ({
     objectsContainer,
   });
   return output;
+};
+
+type InstallAssetFromUrlArgs = {|
+  assetUrl: string,
+  eventsFunctionsExtensionsState: EventsFunctionsExtensionsState,
+  project: gdProject,
+  events: gdEventsList,
+  objectsContainer: gdObjectsContainer,
+|};
+
+export const installAssetFromUrl = async ({
+  assetUrl,
+  eventsFunctionsExtensionsState,
+  project,
+  events,
+  objectsContainer,
+}: InstallAssetFromUrlArgs): Promise<InstallAssetOutput> => {
+  const asset = await getAssetFromUrl(assetUrl);
+  return installAsset({
+    asset,
+    eventsFunctionsExtensionsState,
+    project,
+    events,
+    objectsContainer,
+  });
+};
+
+type InstallAssetFromShortHeaderArgs = {|
+  assetShortHeader: AssetShortHeader,
+  eventsFunctionsExtensionsState: EventsFunctionsExtensionsState,
+  project: gdProject,
+  events: gdEventsList,
+  objectsContainer: gdObjectsContainer,
+|};
+
+export const installAssetFromShortHeader = async ({
+  assetShortHeader,
+  eventsFunctionsExtensionsState,
+  project,
+  events,
+  objectsContainer,
+}: InstallAssetFromShortHeaderArgs): Promise<InstallAssetOutput> => {
+  const asset = await getAssetFromShortHeader(assetShortHeader);
+  return installAsset({
+    asset,
+    eventsFunctionsExtensionsState,
+    project,
+    events,
+    objectsContainer,
+  });
 };

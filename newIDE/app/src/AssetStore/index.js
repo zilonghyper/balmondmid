@@ -13,7 +13,10 @@ import {
   sendAssetOpened,
   sendAssetPackOpened,
 } from '../Utils/Analytics/EventSender';
-import { type AssetShortHeader } from '../Utils/GDevelopServices/Asset';
+import {
+  type AssetShortHeader,
+  type Asset,
+} from '../Utils/GDevelopServices/Asset';
 import { BoxSearchResults } from '../UI/Search/BoxSearchResults';
 import { type SearchBarInterface } from '../UI/SearchBar';
 import {
@@ -35,9 +38,10 @@ import Home from '@material-ui/icons/Home';
 
 type Props = {|
   project: gdProject,
+  customAsset?: ?Asset,
 |};
 
-export const AssetStore = ({ project }: Props) => {
+export const AssetStore = ({ project, customAsset }: Props) => {
   const {
     assetPacks,
     searchResults,
@@ -298,6 +302,7 @@ export const AssetStore = ({ project }: Props) => {
                     onTagSelection={selectTag}
                     assetShortHeader={openedAssetShortHeader}
                     onOpenDetails={onOpenDetails}
+                    customAsset={customAsset}
                   />
                 )}
               </Line>

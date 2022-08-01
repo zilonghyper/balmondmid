@@ -142,7 +142,7 @@ export const listAllAssets = (): Promise<AllAssets> => {
     });
 };
 
-export const getAsset = (
+export const getAssetFromShortHeader = (
   assetShortHeader: AssetShortHeader
 ): Promise<Asset> => {
   return axios
@@ -156,6 +156,16 @@ export const getAsset = (
       return axios.get(assetUrl);
     })
     .then(response => response.data);
+};
+
+export const getAssetFromUrl = (assetUrl: string): Promise<Asset> => {
+  return axios.get(assetUrl).then(response => response.data);
+};
+
+export const getAssetShortHeaderFromUrl = (
+  assetShortHeaderUrl: string
+): Promise<AssetShortHeader> => {
+  return axios.get(assetShortHeaderUrl).then(response => response.data);
 };
 
 export const listAllResources = (): Promise<AllResources> => {

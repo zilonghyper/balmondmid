@@ -9,7 +9,7 @@ import {
   type Asset,
   type Author,
   type ObjectAsset,
-  getAsset,
+  getAssetFromShortHeader,
   isPixelArt,
 } from '../Utils/GDevelopServices/Asset';
 import PlaceholderLoader from '../UI/PlaceholderLoader';
@@ -79,6 +79,7 @@ type Props = {|
   onTagSelection: (tag: string) => void,
   assetShortHeader: AssetShortHeader,
   onOpenDetails: (assetShortHeader: AssetShortHeader) => void,
+  customAsset?: ?Asset,
 |};
 
 const getObjectAssetResourcesByName = (
@@ -98,6 +99,7 @@ export const AssetDetails = ({
   onTagSelection,
   assetShortHeader,
   onOpenDetails,
+  customAsset,
 }: Props) => {
   const gdevelopTheme = React.useContext(ThemeContext);
   const { authors, licenses } = React.useContext(AssetStoreContext);
@@ -113,7 +115,8 @@ export const AssetDetails = ({
         try {
           // Reinitialise asset to trigger a loader and recalculate all parameters. (for instance zoom)
           setAsset(null);
-          const loadedAsset = await getAsset(assetShortHeader);
+          const loadedAsset =
+            customAsset || (await getAssetFromShortHeader(assetShortHeader));
           setAsset(loadedAsset);
           if (loadedAsset.objectType === 'sprite') {
             // Only sprites have animations and we select the first one.
@@ -127,7 +130,7 @@ export const AssetDetails = ({
         }
       })();
     },
-    [assetShortHeader]
+    [assetShortHeader, customAsset]
   );
 
   const isImageResourceSmooth = React.useMemo(
