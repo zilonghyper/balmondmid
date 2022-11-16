@@ -305,6 +305,7 @@ export const AssetStoreFilterPanel = ({
         title={<Trans>Type of objects</Trans>}
         choices={[
           { label: t`Sprite`, value: 'sprite' },
+          { label: t`Custom object`, value: 'partial' },
           { label: t`Tiled sprite`, value: 'tiled' },
           { label: t`Panel sprite`, value: '9patch' },
         ]}
